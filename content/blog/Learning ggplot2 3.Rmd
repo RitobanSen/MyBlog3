@@ -1,0 +1,99 @@
+---
+title: "Learning ggplot - Part 3 of 3 "
+author: "Ritoban Sen"
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+```{r include=F}
+library("tidyverse")
+library("gridExtra")
+```
+
+## 8. Coordinate Systems
+The default coordinate system used by ggplot2 is the cartesian coordinate system. However there are instances where modifications to the cartesian coordinate system becomes useful.
+
+* #### Switching the X and Y axis: *coord_flip()*
+```{r flip}
+ggpl19 = ggplot( data = mpg, mapping = aes(x = class, y = hwy, colour = drv)) +
+  geom_boxplot(show.legend = T)
+
+ggpl20 = ggplot( data = mpg, mapping = aes(x = class, y = hwy, colour = drv)) +
+  geom_boxplot(show.legend = F) +
+  coord_flip()
+
+grid.arrange(ggpl19,ggpl20,ncol=2)
+```
+
+**coord_flip()** is used to switch the x and y axes. This is helpful to view horizontal boxplots or when the labellings of X axis are too long.
+\
+\
+
+* #### Setting proper aspect ratio for maps: *coord_quickmap()*
+```{r quickmap}
+
+nz = map_data("nz")
+
+ggplot(data = nz,
+                mapping = aes(long,lat,group = group)) +
+  geom_polygon(fill = "white", colour = "black")
+
+ggplot(data = nz,
+                mapping = aes(long,lat,group = group)) +
+  geom_polygon(fill = "white", colour = "black") +
+  coord_quickmap()
+
+```
+
+**coord_quickmap()** sets the aspect ratio of spatial data properly.
+\
+\
+
+* #### Polar Coordinates: 
+```{r polar}
+ggplot(diamonds, aes(cut,fill = cut)) +
+  geom_bar(width = 1) +
+  coord_polar() +
+  labs(title = "(Coxcomb Chart)")
+```
+
+**coord_polar()** changes the cartesian coordinates to polar coordinates.
+\
+**Coxcomb Charts** can be formed by drawing a bar chart and changing the coordinates to polar coordinates.
+
+> Q. Turn a stacked bar chart into a pie chart using coord_polar.
+
+```{r stacktopie}
+ggpl23 = ggplot(diamonds,aes(factor(1), fill = clarity)) +
+  geom_bar(width = 1,show.legend = F) +
+  coord_polar(theta = "y") +
+  labs(title = "Pie Chart")
+
+ggpl24 = ggplot(diamonds, aes(factor(1),fill = clarity)) +
+  geom_bar(width = 1) +
+  coord_polar() +
+  labs(title = "Bull's Eye Chart")
+
+grid.arrange(ggpl23,ggpl24,ncol=2)
+```
+
+> Q. What’s the difference between coord_quickmap() and
+coord_map()?
+
+> Useful Information:
+
+**coord_fixed()**\
+```{r fixed}
+ggplot( mpg , aes(cty,hwy)) +
+  geom_point() +
+  geom_abline() +
+  coord_fixed()
+
+ggplot( mpg, aes(cty,hwy)) +
+  geom_point() +
+  geom_abline()
+
+```
+
+Here, *coord_fixed()* causes the *geom_abline()* to draw a line at a 45 degree angle. Useful for visual analysis.
+

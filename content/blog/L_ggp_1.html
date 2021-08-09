@@ -1,0 +1,423 @@
+---
+title: "Learning ggplot - Part 1 of 3 "
+author: "Ritoban Sen"
+date: 2021-08-08
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+<script src="/hugo-goa-demo/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>ggplot2 is one of the core members of the collection of the packages most used for data science : tidyverse. It is powerful data visualization tool.<br />
+<br />
+A templete for ggplots:</p>
+<pre class="r"><code>ggplot(data = &lt;DATA&gt;) +
+  &lt;GEOM_FUNCTION&gt;(
+    mapping = aes(&lt;MAPPINGS&gt;),
+    stat = &lt;STAT&gt;,
+    position = &lt;POSITIONS&gt;,
+  ) +
+  &lt;COORDINATE_FUNTION&gt; +
+  &lt;FACET_FUNTION&gt;</code></pre>
+<p>The templete takes 7 parameters but very rarely do we need to define all 7 parameters. Most of the times R provides useful defaults.<br />
+<br />
+ggplot2 implements the <strong>grammar of graphics</strong> : a coherent system of describing and building graphs. Grammer of Graphics is based on the insight that you can uniquely describe any plot as a combination of a dataset, a geom, a set of mappings, a stat,a position adjustment, a coordinate system and a faceting scheme.<br />
+To use the functions and different tools of tidyverse, first download and load the package:</p>
+<pre class="r"><code>rm(list = ls())
+
+# install.packages(&quot;tidyverse&quot;)
+library(&quot;tidyverse&quot;)
+
+ggplot2::mpg                  #indicates more explicitly that the                                   data set mpg is from the                                      package.</code></pre>
+<p><br />
+<br />
+</p>
+<div id="working-with-a-data-set" class="section level3">
+<h3>Working with a data set</h3>
+<p>For the purposes of learning ggplot2 functions, we will be working with the data set from the package itself - mpg</p>
+<pre class="r"><code>?mpg</code></pre>
+<pre><code>## starting httpd help server ... done</code></pre>
+<p>The following line of code tells us about the data set :<br />
+<br />
+</p>
+<div id="fuel-economy-data-from-1999-to-2008-for-38-popular-models-of-cars" class="section level4">
+<h4><strong>Fuel economy data from 1999 to 2008 for 38 popular models of cars</strong></h4>
+<div id="description" class="section level5">
+<h5>Description</h5>
+<p>This dataset contains a subset of the fuel economy data that the EPA makes available on <a href="https://fueleconomy.gov/" class="uri">https://fueleconomy.gov/</a>. It contains only models which had a new release every year between 1999 and 2008 - this was used as a proxy for the popularity of the car.</p>
+<p>There are 11 variables and 234 sets of data(rows). The variables are:<br />
+</p>
+<ol style="list-style-type: decimal">
+<li><strong>Manufacture</strong> - Manufacture name<br />
+</li>
+<li><strong>Model</strong> - Model name<br />
+</li>
+<li><strong>displ</strong> - Engine displacement (in litres)<br />
+</li>
+<li><strong>year</strong> - Year of manufacture<br />
+</li>
+<li><strong>cyl</strong> - Number of cylinders<br />
+</li>
+<li><strong>trans</strong> - Type of transmission<br />
+</li>
+<li><strong>drv</strong> - Type of drive train - f = front wheel drive, r = rear wheel drive, 4 = 4 wheel drive<br />
+</li>
+<li><strong>cty</strong> - city miles per gallon<br />
+</li>
+<li><strong>hwy</strong> - highway miles per gallon<br />
+</li>
+<li><strong>fl</strong> - Fuel type<br />
+</li>
+<li><strong>class</strong> - “type” of car<br />
+<br />
+</li>
+</ol>
+<blockquote>
+<h4 id="question-do-cars-with-big-engines-use-more-fuel-than-cars-with-small-engines"><strong>Question</strong> : Do cars with big engines use more fuel than cars with small engines?</h4>
+</blockquote>
+<p>To find the answer we need to find the relationship between the engine size and the fuel efficiency. Is it positive? negative? linear? non linear?<br />
+</p>
+</div>
+</div>
+</div>
+<div id="creating-the-ggplot" class="section level3">
+<h3>Creating the ggplot</h3>
+<pre class="r"><code>ggplot(data = mpg)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/ggplot-1.png" width="672" /></p>
+<p>The first line of code calls the function ggplot(). This function creates a coordinate system that we can add layers to. The first argument is the data frame that is being used. ggplot(data = mpg) creates an empty graph as shown above.<br />
+<br />
+</p>
+</div>
+<div id="adding-layers" class="section level2">
+<h2>1. <em>Adding layers</em></h2>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/layers1-1.png" width="672" /></p>
+<p>Layers are added with a ‘+’ sign after the calling of the function.
+‘geom_point()’ adds a layer of points to the ggplot creating a scatterplot.</p>
+<p>Each <strong>geom</strong> function in ggplot takes a ‘mapping’ argument and it is always paired with ‘aes()’.</p>
+<p>The ‘mapping’ argument defines how the data will be mapped visually and the ‘x’ and ‘y’ arguments of ‘aes()’ defines which variables will be plotted in the x and y axis respectively.</p>
+<blockquote>
+<h4 id="conclusion">Conclusion</h4>
+<p>From the above scatterplot we can conclude that the size of the engine is negatively related with the efficiency of a highway drive i.e. cars with larger engines use more fuel per mile than cars with smaller engines in highway drives.<br />
+<br />
+</p>
+</blockquote>
+</div>
+<div id="mapping-aesthetics-in-the-plot-to-variables-of-the-data-set." class="section level2">
+<h2>2. <em>Mapping aesthetics in the plot to variables of the data set.</em></h2>
+<p>More information can be added to our scatterplot by mapping an aesthetic to some variable of the data frame. For example a third variable like ‘class’ can be added to the 2 dimesional scatter plot by mapping an aesthetic to it.</p>
+<ul>
+<li><strong>aesthetic</strong> - visual properties of objects in the plot. The word “level” is used to describe aesthetic properties.<br />
+We can map the colour of our points to the class variable to reveal more information.</li>
+</ul>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_point( mapping = aes(x = displ, y = hwy, colour = class))</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/aes%20to%20other%20var-1.png" width="672" /></p>
+<ul>
+<li><h4 id="scaling"><em>Scaling</em></h4>
+To map an aesthetic to a variable, associate the name of the aesthetic to the name of the variable inside aes(). ggplot2 will automatically assign unique ‘levels’ of the aesthetic to unique values of the variable. This process is called <strong>scaling</strong>.</li>
+</ul>
+<blockquote>
+<h4 id="conclusions-from-this-additional-information">Conclusions from this additional information</h4>
+<p>From this additional information of ‘class’ of each point it can be seen that some of the unusual points (high engine size and relatively higher fuel efficiency) are actually 2-seaters; sports cars. So it can be concluded that sports cars have larger engines but are relatively more fuel efficient.<br />
+<br />
+</p>
+</blockquote>
+<div id="mapping-other-aesthetics-to-the-class-variable" class="section level4">
+<h4><strong>Mapping other <em>‘aesthetics’</em> to the <em>‘class’</em> variable :</strong></h4>
+<pre class="r"><code># install.packages(&quot;gridExtra&quot;)
+library(&quot;gridExtra&quot;)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;gridExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     combine</code></pre>
+<pre class="r"><code>ggp1 = ggplot(data = mpg) +
+         geom_point( mapping = aes(x = displ, y = hwy, alpha = class))
+ggp2 = ggplot(data = mpg) +
+        geom_point( mapping = aes(x = displ, y = hwy, shape = class))
+
+grid.arrange(ggp1,ggp2,nrow=2)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/gridExtra-1.png" width="672" /></p>
+<p>In the first plot the <em>aesthetic</em> used is “<strong>alpha</strong>” which controls the transparency of the points. Although it is not advisable to map this <em>aesthetic</em> to discrete data points.</p>
+<p>In the second plot the <em>aesthetic</em> used is “<strong>shape</strong>” which assigns different shapes to the data points according to their “<strong>class</strong>”. It is not advisable to map this <em>aesthetic</em> to a variable that has more than 6 unique values.<br />
+<br />
+</p>
+<ul>
+<li><h4 id="setting-aesthetics-manually.">Setting <em>‘aesthetics’</em> manually.</h4></li>
+</ul>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_point( mapping = aes(x = displ, y = hwy), colour = &quot;blue&quot;)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/manual_aes-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_point( mapping = aes(x = displ, y = hwy), shape = 23)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/manual_aes-2.png" width="672" /></p>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_point( mapping = aes(x = displ, y = hwy), size = 5)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/manual_aes-3.png" width="672" /></p>
+<p>To set an <em>aesthetic</em> manually, set the <em>aesthetic</em> by name as an argument of the <em>geom</em> function i.e. outside of <em>aes()</em>.
+In the above plots the <em>aesthetics</em> set manually are <em>colour</em>, <em>shape</em>, <em>size</em>.
+Setting an <em>aesthetic</em> manually does not show additional information.</p>
+</div>
+</div>
+<div id="facets" class="section level2">
+<h2>3. <em>Facets</em></h2>
+<p>Facets are subplots that each display one subset of data.
+To facet a plot using one variable use <strong>‘facet_wrap()’</strong>.
+To facet a plot using two variables use <strong>‘facet_grid()’</strong>.<br />
+Facet variables should be discrete.</p>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_point( mapping = aes(x = displ, y = hwy)) +
+  facet_wrap(~ class, nrow =2)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/facet_wrap-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_point( mapping = aes(x = displ, y = hwy)) +
+  facet_wrap( drv~cyl )</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/facet_grid-1.png" width="672" /><br />
+<br />
+</p>
+</div>
+<div id="geometric-objects" class="section level2">
+<h2>4. <em>Geometric Objects</em></h2>
+<p><strong>geom</strong> is a <em>Geometric Object</em> that a plot uses to represent data.<br />
+<br />
+Bar charts use <strong>bar geoms</strong>, boxplot uses <strong>boxplot geoms</strong>, line plot uses <strong>line geoms</strong>, scatterplot uses <strong>point geom</strong>. Every <em>geom</em> function in ggplot2 takes a <em>mapping</em> argument.<br />
+<br />
+However every <em>aesthetic</em> does not work with all <em>geoms</em>.<br />
+</p>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_smooth( mapping = aes(x = displ, y =hwy))</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/smooth1-1.png" width="672" /></p>
+<p><em>smooth</em> is a <em>line geom</em>. It draws the conditional expectation or the regression line.
+<em>shape</em> of a line cannot be set. However the <em>linetype</em> can be set.</p>
+<pre class="r"><code>ggplot( data = mpg ) +
+  geom_smooth( mapping = aes( x = displ, y = hwy, linetype = drv))</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/smooth2-1.png" width="672" /></p>
+<p>Here, <em>geom_smooth</em> seperates the line chart according to the “drv” value of the variables.</p>
+<p>ggplot2 has over 30 geoms.<br />
+<br />
+</p>
+<ul>
+<li><h4 id="multiple-geom-funtions-to-the-same-plot.-adding-multiple-layers">Multiple <em>geom</em> funtions to the same plot. (Adding multiple layers)</h4></li>
+</ul>
+<pre class="r"><code>ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, colour = drv)) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, colour = drv))</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/layers2-1.png" width="672" /></p>
+<p>A more efficient way:</p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, colour = drv)) +
+  geom_point() +
+  geom_smooth()</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/global_mapping-1.png" width="672" /></p>
+<p>Passing a <em>mapping</em> argument through <em>ggplot()</em> reduces redundancy as <em>ggplot()</em> will assume the mapping as global mapping instead of a local mapping.<br />
+<br />
+</p>
+<ul>
+<li><h4 id="specifying-different-data-to-different-layers.">Specifying different data to different layers.</h4></li>
+</ul>
+<pre class="r"><code>ggplot( data = mpg , mapping = aes( x = displ, y = hwy, colour = drv )) +
+  geom_point(show.legend = F) +
+  geom_smooth( data = filter(mpg, class == &#39;subcompact&#39;), se = F, colour = &#39;black&#39;)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/local_data-1.png" width="672" /></p>
+<p>Here, the local “<em>data</em>” argument overrides the global “<em>data</em>” argument.</p>
+<blockquote>
+<h3 id="different-geoms">Different Geoms :</h3>
+<ol style="list-style-type: decimal">
+<li><strong>geom_point()</strong> : points<br />
+</li>
+<li><strong>geom_smooth()</strong> : smoothed conditional means (line chart)<br />
+</li>
+<li><strong>geom_histogram()</strong> : histogram<br />
+</li>
+<li><strong>geom_area()</strong> : area chart<br />
+</li>
+<li><strong>geom_boxplot()</strong> : boxplot<br />
+</li>
+<li><strong>geom_bar()</strong>, <strong>geom_col()</strong> : bar charts<br />
+</li>
+<li><strong>geom_abline()</strong>, <strong>geom_hline()</strong>, <strong>geom_vline()</strong> : reference lines<br />
+</li>
+<li><strong>geom_blank()</strong> : draw nothing<br />
+</li>
+<li><strong>geom_contour()</strong>, <strong>geom_contour_filled()</strong> : 2D contours of 3D surfaces<br />
+</li>
+<li><strong>geom_count()</strong> : count overlapping points<br />
+</li>
+<li><strong>geom_dotplot()</strong> : dotplots<br />
+</li>
+<li><strong>geom_density()</strong> : Smoothed density estimates<br />
+</li>
+<li><strong>geom_density_2d()</strong>,<strong>geom_desnity_2d_filled()</strong> : Contours of a 2D density estimate<br />
+</li>
+<li><strong>geom_errorbarh()</strong> : Horizontal error bars<br />
+</li>
+<li><strong>geom_function()</strong> : draw a function as a continuous curve<br />
+</li>
+<li><strong>geom_hex()</strong> : hexagonal heatmap of 2D bin counts<br />
+</li>
+<li><strong>geom_freqpoly()</strong> : frequency polygons<br />
+</li>
+<li><strong>geom_jitter()</strong> : Jittered points<br />
+</li>
+<li><strong>geom_crossbar()</strong>, <strong>geom_errorbar()</strong>, <strong>geom_linerange()</strong>,<strong>geom_pointrange()</strong> : vertical intervals - lines, crossbars, errorbars<br />
+</li>
+<li><strong>geom_map()</strong> : polygons from a reference map<br />
+</li>
+<li><strong>geom_path()</strong>, <strong>geom_line()</strong>, <strong>geom_step()</strong> : Connect observations<br />
+</li>
+<li><strong>geom_polygon()</strong> : Polygons<br />
+</li>
+<li><strong>geom_qq_line()</strong>, <strong>geom_qq()</strong> : A quantile-quantile plot<br />
+</li>
+<li><strong>geom_quantile()</strong> : Quantile Regression<br />
+</li>
+<li><strong>geom_ribbon()</strong> : ribbons<br />
+</li>
+<li><strong>geom_rug()</strong> : rug lots in the margins<br />
+</li>
+<li><strong>geom_segment()</strong>, <strong>geom_curve()</strong> : line segments and crves<br />
+</li>
+<li><strong>geom_spoke()</strong> : line segments parameterised by location, direction and distance<br />
+</li>
+<li><strong>geom_label()</strong>, <strong>geom_text()</strong> : text<br />
+</li>
+<li><strong>geom_raster()</strong>, <strong>geom_rect()</strong>,<strong>geom_tile()</strong> : rectangles<br />
+</li>
+<li><strong>geom_violin()</strong> : violin plot<br />
+</li>
+<li><strong>geom_sf()</strong>, <strong>geom_sf_label()</strong>, <strong>geom_sf_text()</strong> : Visulaize sf objects<br />
+<br />
+<br />
+</li>
+</ol>
+</blockquote>
+<div id="some-possible-plots" class="section level4">
+<h4><strong>Some Possible Plots</strong></h4>
+<pre class="r"><code>ggpl1 = ggplot(data = mpg, mapping = aes(x = displ, y= hwy)) +
+          geom_point(mapping = aes()) +
+          geom_smooth(se = F)
+ggpl2 = ggplot(data = mpg, mapping = aes( x = displ, y = hwy)) +
+          geom_point(mapping = aes(), show.legend = F) +
+          geom_smooth( data = filter(mpg, drv == &quot;f&quot;), se = F, show.legend = F ) +
+          geom_smooth( data = filter(mpg,drv == &quot;r&quot;), se = F, show.legend = F ) +
+          geom_smooth( data = filter(mpg,drv == &quot;4&quot;), se = F, show.legend = F )
+  
+ggpl3 = ggplot(data = mpg, mapping = aes( x = displ, y = hwy, colour = drv)) +
+          geom_point(mapping = aes(), show.legend = F) +
+          geom_smooth( mapping = aes(linetype = drv), se = F, show.legend = T )
+  
+ggpl4 = ggplot( data = mpg, mapping = aes( x = displ, y = hwy, colour = drv)) +
+          geom_point(mapping = aes(fill = drv), shape = 21, colour =&quot;white&quot;, stroke = 2)
+
+ggpl5 = ggplot( data = mpg, mapping = aes( x = displ, y = hwy)) +
+          geom_point(mapping = aes(colour = drv)) +
+          geom_smooth(mapping = aes(linetype =drv),se = F)
+
+ggpl6 = ggplot( data = mpg, mapping = aes(x = displ, y = hwy )) +
+          geom_point(mapping = aes(colour = drv)) +
+          geom_smooth(se = F)
+
+grid.arrange(ggpl1,ggpl2,ggpl3,ggpl4,ggpl5,ggpl6,ncol=2)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;
+## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/misc%20plots-1.png" width="672" /><br />
+<br />
+</p>
+</div>
+</div>
+<div id="overplotting-and-jittering" class="section level2">
+<h2>5. Overplotting and <em>jittering</em></h2>
+<p>In the scatterplot only some of the data points are visible. If you count you can see that only 126 instead of 234 points are visible in the plot. This happens because the values of <em>displ</em> and <em>hwy</em> have been rounded off to fit the grids. So many points lie on top of each other in the plot and are visually indistinguishable. This is called <strong>overplotting</strong>.<br />
+The disadvantage of overplotting is that it cannot be visually determined where the mass of the data lies. IS the data uniformly dense throughout or is there a concentration of data points at some combination of (<em>displ</em>,<em>hwy</em>)?<br />
+<br />
+</p>
+<ul>
+<li><h5 id="jittering"><strong>Jittering</strong><br />
+</h5>
+<em>jittering</em> is the solution to this drawback. Passing <em>position = “jitter”</em> as an argument of <em>geom_points()</em> introduces some small random error to each point. So no points overlap anymore as the amount of random error for any two points don’t usually become equal. Now the density structure of the data can be visually sensed.<br />
+</li>
+</ul>
+<pre class="r"><code>ggpl17 = ggplot(data = mpg) +
+  geom_point(
+    mapping = aes(x = displ, y = hwy),position = &quot;jitter&quot;
+    )
+
+ggpl18 = ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+grid.arrange(ggpl18,ggpl17,ncol = 2)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/jittering-1.png" width="672" /></p>
+<p>A shorthand for this layer is “<strong>geom_jitter()</strong>”</p>
+<blockquote>
+<p>Q .What parameters control the amount of jittering in <em>geom_jitter()</em>?</p>
+</blockquote>
+<p><em>Answer</em> :<br />
+<strong>width</strong> : Amount of vertical and horizontal jitter. The jitter is added in both positive and negative directions, so the total spread is twice the value specified here.
+If omitted, defaults to 40% of the resolution of the data: this means the jitter values will occupy 80% of the implied bins. Categorical data is aligned on the integers, so a width or height of 0.5 will spread the data so it’s not possible to see the distinction between the categories.<br />
+</p>
+<p><strong>height</strong> : Amount of vertical and horizontal jitter. The jitter is added in both positive and negative directions, so the total spread is twice the value specified here.
+If omitted, defaults to 40% of the resolution of the data: this means the jitter values will occupy 80% of the implied bins. Categorical data is aligned on the integers, so a width or height of 0.5 will spread the data so it’s not possible to see the distinction between the categories.<br />
+</p>
+<blockquote>
+<p>Q. Compare and contrast <em>geom_jitter()</em> with <em>geom_count()</em></p>
+</blockquote>
+<p><em>Answer</em><br />
+</p>
+<ul>
+<li><p><em>geom_jitter()</em> adds random error to the data points to reduce overplotting.</p></li>
+<li><p><em>geom_count()</em> works like the geom_point() but here the points are sized according to the their frequency of occurrence. Points (<em>displ</em>,<em>hwy</em>) that appear more frequently in the data will be larger in size compared to those who don not appear as frequently in the data.</p></li>
+</ul>
+<pre class="r"><code>ggplot( 
+  data = mpg, mapping = aes(x = displ, y = hwy)
+  ) +
+  geom_jitter() +
+  labs(title = &quot;geom_jitter()&quot;)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/jitteringCount-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(
+  data = mpg, mapping = aes(x = displ, y = hwy)
+  ) +
+  geom_count() +
+  labs(title = &quot;geom_count()&quot;)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/jitteringCount-2.png" width="672" /></p>
+<pre class="r"><code>ggplot(
+  data = mpg, mapping = aes(x = displ, y = hwy, colour = class)
+  ) +
+  geom_jitter() +
+  labs(title = &quot;geom_jitter()&quot;, subtitle = &quot;colour = class&quot;)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/jitteringCount-3.png" width="672" /></p>
+<pre class="r"><code>ggplot(
+ data = mpg, mapping = aes(x = displ, y = hwy, colour = class)
+ ) +
+ geom_count( ) +
+ labs(title = &quot;geom_count()&quot;, subtitle = &quot;colour = class&quot;)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/jitteringCount-4.png" width="672" /></p>
+<pre class="r"><code>ggplot(
+ data = mpg,mapping = aes(x = displ, y = hwy, colour = class)
+ ) +
+ geom_count() +
+ geom_jitter( show.legend = F) +
+ labs(title = &quot;geom_count() and geom_jitter()&quot;, subtitle = &quot;colour = class&quot;)</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/jitteringCount-5.png" width="672" /></p>
+<blockquote>
+<p>What’s the default position adjustment for geom_boxplot()?
+Create a visualization of the mpg dataset that demonstrates it.</p>
+</blockquote>
+<p><em>Answer</em> :<br />
+The default position adjustment of <em>geom_boxplot()</em> is <strong>dodge2</strong> whichis a shortcut for <em>postion_dodge2</em>. This position adjustment does not change the vertical position of a geom but moves the geom horizontally to avoid overlapping other geoms.<br />
+</p>
+<pre class="r"><code>ggplot(data = mpg, mapping = aes(x = displ, y = hwy, colour = class)) +
+  geom_boxplot()</code></pre>
+<p><img src="/hugo-goa-demo/blog/L_ggp_1_files/figure-html/boxplot-1.png" width="672" /></p>
+</div>

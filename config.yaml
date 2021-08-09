@@ -1,0 +1,80 @@
+baseurl: https://shenoybr.github.io/hugo-goa-demo/
+builddrafts: no
+canonifyurls: no
+languageCode: en-US
+contentdir: content
+layoutdir: layouts
+publishdir: public
+author: Ritoban Sen
+title: Ritoban Sen
+theme: hugo-goa
+disqusShortname: https-shenoybr-github-io-hugo-goa-demo
+googleAnalytics: XYZ
+enableRobotsTXT: yes
+params:
+  author: Clockwork-R
+  authorimage: co.jpg
+  dateformat: Aug 9, 2021
+  description: <br/> <br/> I web, therefore I am 
+    #<br/> "What is F times 5? It's Fleventy-five."
+  extra:
+  #  copyright: © 2016. Erlich Bachman. [Some Rights Reserved](http://creativecommons.org/licenses/by/3.0/).
+  #  displayrssicon: yes
+  #  highlightjs: yes
+  #  poweredby: yes
+  #  socialmarkup: yes
+  #  toc: yes
+  
+  intro: Ritoban's Blog about Statistical Methods
+  meta:
+    description: Simple minimalist theme
+    keywords: minimalist,blog,goa,hugo,developer
+  social:
+    #bitbucket: <username>
+    email: ritoban.rstat@gmail.com
+    #facebook: <username>
+    #fivehundredpx: <username>
+    #flickr: <username>
+    #foursquare: <username>
+    github: RitobanSen/
+    #gitlab: <username>
+    #goodreads: <username>
+    #google: <username>
+    #googlescholar: <account_id>
+    #hackernews: <username>
+    instagram: ritoban_sen_/
+    #keybase: <username>
+    #kickstarter: <username>
+    #lastfm: <username>
+    linkedin: ritoban-sen/
+    #patreon: <username>
+    #pgp: <key_fingerprint>
+    #pintrest: <username>
+    #reddit: <username>
+    #skype: <username>
+    #snapchat: <username>
+    #soundcloud: <username>
+    #stackoverflow: <username>
+    #steam: <username>
+    #strava: <username>
+    #telegram: <username>
+    #tumblr: <username>
+    #twitch: <username>
+    #twitter: <username>
+    #whatsapp: <username>
+    #xing: <username>
+    #youtube: <channelid>
+menu:
+  main:
+    - identifier: blog
+      name: blog
+      url: /blog/
+      weight: 100
+    - identifier: about
+      name: about
+      url: /about/
+      weight: 200
+    - identifier: coderag
+      name: coderag
+      url: /coderag/
+      weight: 300

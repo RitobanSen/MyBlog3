@@ -1,0 +1,91 @@
+---
+title: "Learning ggplot - Part 3 of 3 "
+author: "Ritoban Sen"
+date: 2021-08-08
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+<script src="Learning ggplot2 3_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="coordinate-systems" class="section level2">
+<h2>8. Coordinate Systems</h2>
+<p>The default coordinate system used by ggplot2 is the cartesian coordinate system. However there are instances where modifications to the cartesian coordinate system becomes useful.</p>
+<ul>
+<li><h4 id="switching-the-x-and-y-axis-coord_flip">Switching the X and Y axis: <em>coord_flip()</em></h4></li>
+</ul>
+<pre class="r"><code>ggpl19 = ggplot( data = mpg, mapping = aes(x = class, y = hwy, colour = drv)) +
+  geom_boxplot(show.legend = T)
+
+ggpl20 = ggplot( data = mpg, mapping = aes(x = class, y = hwy, colour = drv)) +
+  geom_boxplot(show.legend = F) +
+  coord_flip()
+
+grid.arrange(ggpl19,ggpl20,ncol=2)</code></pre>
+<p><img src="/hugo-goa-demo/blog/Learning%20ggplot2%203_files/figure-html/flip-1.png" width="672" /></p>
+<p><strong>coord_flip()</strong> is used to switch the x and y axes. This is helpful to view horizontal boxplots or when the labellings of X axis are too long.<br />
+<br />
+</p>
+<ul>
+<li><h4 id="setting-proper-aspect-ratio-for-maps-coord_quickmap">Setting proper aspect ratio for maps: <em>coord_quickmap()</em></h4></li>
+</ul>
+<pre class="r"><code>nz = map_data(&quot;nz&quot;)
+
+ggplot(data = nz,
+                mapping = aes(long,lat,group = group)) +
+  geom_polygon(fill = &quot;white&quot;, colour = &quot;black&quot;)</code></pre>
+<p><img src="/hugo-goa-demo/blog/Learning%20ggplot2%203_files/figure-html/quickmap-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data = nz,
+                mapping = aes(long,lat,group = group)) +
+  geom_polygon(fill = &quot;white&quot;, colour = &quot;black&quot;) +
+  coord_quickmap()</code></pre>
+<p><img src="/hugo-goa-demo/blog/Learning%20ggplot2%203_files/figure-html/quickmap-2.png" width="672" /></p>
+<p><strong>coord_quickmap()</strong> sets the aspect ratio of spatial data properly.<br />
+<br />
+</p>
+<ul>
+<li><h4 id="polar-coordinates">Polar Coordinates:</h4></li>
+</ul>
+<pre class="r"><code>ggplot(diamonds, aes(cut,fill = cut)) +
+  geom_bar(width = 1) +
+  coord_polar() +
+  labs(title = &quot;(Coxcomb Chart)&quot;)</code></pre>
+<p><img src="/hugo-goa-demo/blog/Learning%20ggplot2%203_files/figure-html/polar-1.png" width="672" /></p>
+<p><strong>coord_polar()</strong> changes the cartesian coordinates to polar coordinates.<br />
+<strong>Coxcomb Charts</strong> can be formed by drawing a bar chart and changing the coordinates to polar coordinates.</p>
+<blockquote>
+<p>Q. Turn a stacked bar chart into a pie chart using coord_polar.</p>
+</blockquote>
+<pre class="r"><code>ggpl23 = ggplot(diamonds,aes(factor(1), fill = clarity)) +
+  geom_bar(width = 1,show.legend = F) +
+  coord_polar(theta = &quot;y&quot;) +
+  labs(title = &quot;Pie Chart&quot;)
+
+ggpl24 = ggplot(diamonds, aes(factor(1),fill = clarity)) +
+  geom_bar(width = 1) +
+  coord_polar() +
+  labs(title = &quot;Bull&#39;s Eye Chart&quot;)
+
+grid.arrange(ggpl23,ggpl24,ncol=2)</code></pre>
+<p><img src="/hugo-goa-demo/blog/Learning%20ggplot2%203_files/figure-html/stacktopie-1.png" width="672" /></p>
+<blockquote>
+<p>Q. What’s the difference between coord_quickmap() and
+coord_map()?</p>
+</blockquote>
+<blockquote>
+<p>Useful Information:</p>
+</blockquote>
+<p><strong>coord_fixed()</strong><br />
+</p>
+<pre class="r"><code>ggplot( mpg , aes(cty,hwy)) +
+  geom_point() +
+  geom_abline() +
+  coord_fixed()</code></pre>
+<p><img src="/hugo-goa-demo/blog/Learning%20ggplot2%203_files/figure-html/fixed-1.png" width="672" /></p>
+<pre class="r"><code>ggplot( mpg, aes(cty,hwy)) +
+  geom_point() +
+  geom_abline()</code></pre>
+<p><img src="/hugo-goa-demo/blog/Learning%20ggplot2%203_files/figure-html/fixed-2.png" width="672" /></p>
+<p>Here, <em>coord_fixed()</em> causes the <em>geom_abline()</em> to draw a line at a 45 degree angle. Useful for visual analysis.</p>
+</div>
